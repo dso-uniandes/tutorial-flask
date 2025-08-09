@@ -1,4 +1,4 @@
-from flaskr import create_app
+from flaskr import create_app, make_celery
 from flask_restful import Api
 from .modelos import db
 from .vistas import VistaCanciones, VistaCancion, VistaSignIn, VistaLogIn, VistaAlbum, VistaAlbumsUsuario, VistaCancionesAlbum
@@ -24,3 +24,5 @@ api.add_resource(VistaAlbum, '/album/<int:id_album>')
 api.add_resource(VistaCancionesAlbum, '/album/<int:id_album>/canciones')
 
 jwt = JWTManager(app)
+
+celery = make_celery(app)

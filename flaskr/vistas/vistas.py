@@ -3,10 +3,17 @@ from ..modelos import db, Cancion, CancionSchema, Usuario, UsuarioSchema, Album,
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token
+from datetime import datetime
+from ..app import celery
 
 cancion_schema = CancionSchema()
 usuario_schema = UsuarioSchema()
 album_schema = AlbumSchema()
+
+@celery.task(name='registrar_log')
+def registrar_log(usuario, fecha):
+    with open('logs_signin.txt', 'a+') as file:
+        file.write('{} - inicio de sesión: {}\n'.format(usuario, fecha))
 
 
 class VistaCanciones(Resource):
@@ -52,6 +59,7 @@ class VistaLogIn(Resource):
             u_contrasena = request.json["contrasena"]
             usuario = Usuario.query.filter_by(nombre=u_nombre, contrasena = u_contrasena).all()
             if usuario:
+                registrar_log.apply_async(args=(u_nombre, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')), queue='logs')
                 token_de_acceso = create_access_token(identity=u_nombre)
                 return {'mensaje':'Inicio de sesión exitoso', 'token': token_de_acceso}, 200
             else:
