@@ -1,0 +1,125 @@
+===========================================
+COMANDOS POWERSHELL PARA LA API DE MÚSICA
+===========================================
+
+BASE URL: http://localhost:5000
+
+===========================================
+1. GESTIÓN DE USUARIOS
+===========================================
+
+# Crear un nuevo usuario (Sign Up)
+$userData = @{
+    nombre = "usuario_ejemplo"
+    contrasena = "password123"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/signin" -Method POST -ContentType "application/json" -Body $userData
+
+# Iniciar sesión (Login)
+$loginData = @{
+    nombre = "usuario_ejemplo"
+    contrasena = "password123"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/login" -Method POST -ContentType "application/json" -Body $loginData
+
+# Actualizar contraseña de usuario (PUT)
+$updatePasswordData = @{
+    contrasena = "nueva_password123"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/signin/1" -Method PUT -ContentType "application/json" -Body $updatePasswordData
+
+# Eliminar usuario (DELETE)
+Invoke-RestMethod -Uri "http://localhost:5000/signin/1" -Method DELETE
+
+===========================================
+2. GESTIÓN DE CANCIONES
+===========================================
+
+# Obtener todas las canciones
+Invoke-RestMethod -Uri "http://localhost:5000/canciones" -Method GET
+
+# Crear una nueva canción
+$cancionData = @{
+    titulo = "Cancion de ejemplo"
+    minutos = 3
+    segundos = 45
+    interprete = "Artista Ejemplo"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/canciones" -Method POST -ContentType "application/json" -Body $cancionData
+
+# Obtener una canción específica por ID
+Invoke-RestMethod -Uri "http://localhost:5000/cancion/1" -Method GET
+
+# Actualizar una canción
+$updateCancionData = @{
+    titulo = "Titulo actualizado"
+    minutos = 4
+    segundos = 30
+    interprete = "Artista Actualizado"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/cancion/1" -Method PUT -ContentType "application/json" -Body $updateCancionData
+
+# Eliminar una canción
+Invoke-RestMethod -Uri "http://localhost:5000/cancion/1" -Method DELETE
+
+===========================================
+3. GESTIÓN DE ÁLBUMES
+===========================================
+
+# Obtener todos los álbumes de un usuario
+Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method GET
+
+# Crear un nuevo álbum para un usuario
+$albumData = @{
+    titulo = "Mi Primer Album"
+    anio = 2024
+    descripcion = "Descripcion del album"
+    medio = "CD"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method POST -ContentType "application/json" -Body $albumData
+
+# Obtener un álbum específico por ID
+Invoke-RestMethod -Uri "http://localhost:5000/album/1" -Method GET
+
+# Actualizar un álbum
+$updateAlbumData = @{
+    titulo = "Titulo del album actualizado"
+    anio = 2025
+    descripcion = "Descripcion actualizada"
+    medio = "Vinilo"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/album/1" -Method PUT -ContentType "application/json" -Body $updateAlbumData
+
+# Eliminar un álbum
+Invoke-RestMethod -Uri "http://localhost:5000/album/1" -Method DELETE
+
+===========================================
+4. GESTIÓN DE CANCIONES EN ÁLBUMES
+===========================================
+
+# Obtener todas las canciones de un álbum
+Invoke-RestMethod -Uri "http://localhost:5000/album/1/canciones" -Method GET
+
+# Agregar una canción existente a un álbum
+$addCancionData = @{
+    id_cancion = 1
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/album/1/canciones" -Method POST -ContentType "application/json" -Body $addCancionData
+
+# Crear una nueva canción y agregarla a un álbum
+$nuevaCancionAlbumData = @{
+    titulo = "Nueva cancion para el album"
+    minutos = 2
+    segundos = 30
+    interprete = "Artista del album"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:5000/album/1/canciones" -Method POST -ContentType "application/json" -Body $nuevaCancionAlbumData
