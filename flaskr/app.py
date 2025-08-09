@@ -1,5 +1,6 @@
 from flaskr import create_app
-from .modelos import db, Cancion
+from .modelos import db, Cancion, Album
+from .modelos import AlbumSchema
 
 app = create_app("default")
 app_context = app.app_context()
@@ -10,7 +11,8 @@ db.create_all()
 
 # Prueba
 with app.app_context():
-    cancion = Cancion(titulo="Despacito", minutos=3, segundos=47, interprete="Luis Fonsi")
-    db.session.add(cancion)
+    album_schema = AlbumSchema()
+    A = Album(titulo="Album Test", anio=2023, descripcion="Test Album", medio="CD")
+    db.session.add(A)
     db.session.commit()
-    print(Cancion.query.all())  
+    print([album_schema.dumps(album) for album in Album.query.all()])   
