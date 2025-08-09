@@ -23,7 +23,8 @@ $loginData = @{
     contrasena = "password123"
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://localhost:5000/login" -Method POST -ContentType "application/json" -Body $loginData
+$response = Invoke-RestMethod -Uri "http://localhost:5000/login" -Method POST -ContentType "application/json" -Body $loginData
+$response | ConvertTo-Json -Depth 10
 
 # Actualizar contraseña de usuario (PUT)
 $updatePasswordData = @{
