@@ -14,7 +14,8 @@ $userData = @{
     contrasena = "password123"
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://localhost:5000/signin" -Method POST -ContentType "application/json" -Body $userData
+$response = Invoke-RestMethod -Uri "http://localhost:5000/signin" -Method POST -ContentType "application/json" -Body $userData
+$response | ConvertTo-Json -Depth 10
 
 # Iniciar sesión (Login)
 $loginData = @{
@@ -71,10 +72,19 @@ Invoke-RestMethod -Uri "http://localhost:5000/cancion/1" -Method DELETE
 3. GESTIÓN DE ÁLBUMES
 ===========================================
 
-# Obtener todos los álbumes de un usuario
-Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method GET
+# Obtener todos los álbumes de un usuario (requiere token)
+$headers = @{
+    "Content-Type" = "application/json"
+    "Authorization" = "Bearer x"
+}
 
-# Crear un nuevo álbum para un usuario
+Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method GET -Headers $headers
+
+# Crear un nuevo álbum para un usuario (requiere token)
+$headers = @{
+    "Content-Type" = "application/json"
+    "Authorization" = "Bearer x"
+}
 $albumData = @{
     titulo = "Mi Primer Album"
     anio = 2024
@@ -82,7 +92,7 @@ $albumData = @{
     medio = "CD"
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method POST -ContentType "application/json" -Body $albumData
+Invoke-RestMethod -Uri "http://localhost:5000/usuario/1/albumes" -Method POST -Headers $headers -Body $albumData
 
 # Obtener un álbum específico por ID
 Invoke-RestMethod -Uri "http://localhost:5000/album/1" -Method GET
